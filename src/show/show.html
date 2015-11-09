@@ -1,0 +1,47 @@
+<md-tabs md-dynamic-height md-border-bottom>
+
+  <md-tab label="Viewers">
+    <md-content class="np-padding">
+      <div ng-include="'show/partials/viewers.html'"></div>
+    </md-content>
+  </md-tab>
+
+  <md-tab label="Basemap Data">
+    <md-content>
+      <md-list ng-repeat="block in basemapData">
+        <md-subheader class="md-no-sticky" style="background-color: #ddd; color: #4d4d4d; margin: 0;">{{ block.header }}</md-subheader>
+        <div ng-repeat="item in block.items">
+          <a href="{{ item.link }}" target="_blank">
+            <md-list-item class="md-3-line">
+              <div class="md-list-item-text" layout="column">
+                <h3>{{ item.title }}</h3>
+                <h4>{{ item.text }}</h4>
+                <p>{{ item.type }}</p>
+              </div>
+            </md-list-item>
+          </a>
+          <md-divider></md-divider>
+        </div>
+      </md-list>
+    </md-content>
+  </md-tab>
+
+  <md-tab label="Basemap Services">
+    <md-content class="np-padding">
+      <marked ng-include="'show/partials/basemapServices.md'"></marked>
+    </md-content>
+  </md-tab>
+
+  <md-tab label="Thematic Map Services">
+    <md-content class="np-padding">
+      <div ng-include="'show/partials/thematicServices.html'"></div>
+    </md-content>
+  </md-tab>
+
+  <md-tab label="Documentation">
+    <md-content class="np-padding">
+      <div ng-include="'show/partials/docs.html'"></div>
+    </md-content>
+  </md-tab>
+
+</md-tabs>
