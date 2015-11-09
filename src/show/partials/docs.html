@@ -1,0 +1,372 @@
+<h2>Norwegian Polar Institute Maps API - Javascript</h2>
+<md-divider></md-divider>
+
+<h4>Overview</h4>
+
+<div layout-padding>
+	NPI provides topographic maps of Svalbard and Jan Mayen served at
+	<a href="http://geodata.npolar.no/arcgis/rest/services">geodata.npolar.no/arcgis/rest/services</a>.
+	These maps can be consumed through various client applications such as
+	ArcGIS API for JavaScript, Google Maps API, OpenLayers etc. to easily
+	create a mapping application.
+
+	This documentation shows how to quickly setup and develop an interactive
+	web map application for the Svalbard region using ArcGIS API for
+	Javascript, including adding place name search, working with map
+	overlays and popups and dealing with map services. The ArcGIS API for
+	JavaScript is a lightweight way to embed maps and tasks in web
+	applications similar to Google Maps API with more advanced
+	functionalities, such as geoprocessing, network analysis and data
+	editing.
+</div>
+
+<h4>Audience</h4>
+
+<div layout-padding>
+	This documentation is designed with the assumption that you are familiar
+	with basic JavaScript programming and mapping concepts (such as Google
+	Maps). It's also desirable if you make yourself familiar with Esri's
+	<a href="https://developers.arcgis.com/javascript">ArcGIS API for Javascript</a>
+	to take full advantage of the mapping API.
+</div>
+
+<h3>Setting The Map</h3>
+<md-divider></md-divider>
+
+<div layout-padding>
+	The easiest way to setup a map of Svalbard using ArcGIS API for
+	JavaScript is to see a simple example. The following html page displays
+	a map of Svalbard centered around Longyearbyen:
+
+	<xmp>
+
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+			<link rel="stylesheet" href="http://geodata.npolar.no/arcgis_js_api/library/3.8/3.8/js/esri/css/esri.css"/>
+			<style type="text/css">
+				html { height: 100% }
+				body { height: 100%; margin: 0; padding: 0 }
+				#map { height: 100% }
+			</style>
+			<script src="http://geodata.npolar.no/arcgis_js_api/library/3.8/3.8/init.js"></script>
+			<script type="text/javascript">
+				dojo.require("esri.map");
+				function initialize() {
+					var initialExtent = new esri.geometry.Extent({
+						"xmin": 477423.89,
+						"ymin":8663685.98,
+						"xmax":553624.05,
+						"ymax":8714486.09,
+						"spatialReference":{"wkid":25833}
+					});
+					// create map instance and add a basemap
+					map = new esri.Map("map", {extent: initialExtent, logo : false});
+					basemapURL = "http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer"
+					map.addLayer(new esri.layers.ArcGISTiledMapServiceLayer(basemapURL));
+				}
+
+				dojo.ready(initialize);
+			</script>
+		</head>
+		<body>
+			<div id="map" style="width:100%; height:100%;"></div>
+		</body>
+	</html>
+
+	</xmp>
+
+	There are a few steps to follow in order to initialize a map in your web
+	application:
+
+	<ol>
+		<li>
+			Setup an HTML document and include esri.css style sheet in the head
+			section of the document to have styles and various widgets for the
+			map.
+
+			<xmp><link rel="stylesheet" href="http://geodata.npolar.no/arcgis_js_api/library/3.8/3.8/js/esri/css/esri.css"/></xmp>
+		</li>
+		<li>
+			Add reference to the ArcGIS API for Javascript which loads all
+			symbols and definitions needed for using the API.
+		</li>
+		<li>
+			Create a div element with a certain id to hold the map. The size
+			of the map is specified in the style attribute of the div.
+		</li>
+		<li>
+			Use another script tag to load the mapping modules from ArcGIS
+			JavaScript API using the <em>dojo.require()</em> function. The initialize
+			function creates a map instance using the <em>esri.Map</em> module and
+			connects it with the DIV element created above by referencing it
+			using the <em>"map"</em> id.
+		</li>
+	</ol>
+
+
+	<xmp>
+	<script>
+		dojo.require("esri.map");
+		function initialize() {
+			// create map instance and add a basemap
+			var map = new esri.Map("map");
+			basemapURL = "http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServerin"
+			map.addLayer(new esri.layers.ArcGISTiledMapServiceLayer(basemapURL));
+		}
+
+		dojo.ready(initialize);
+	</script>
+	</xmp>
+
+	Add a topographic basemap of Svalbard to the map by providing the cached
+	<a href="http://geodata.npolar.no/ArcGIS/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer">map service REST URI</a>.
+	Finally, instruct the API to only execute the <em>initialize()</em> function after
+	dependencies are fully loaded and the DOM is read, by passing
+	<em>dojo.ready()</em>. <b>That's it!</b> You now have a working map of Svalbard.
+
+	<h4>Map Options</h4>
+
+	At this stage, you didn't pass any optional parameters when creating the
+	map instance and therefore the map is loaded with the default extent and
+	zoom level.
+
+	Because we often want to center the map on a specific area, create an
+	initialExtent object to hold the starting extent of the map and add it
+	to the map instance created above. Use the <a href="http://geodata.npolar.no/documentation/extenthelper.html">extent Helper</a>
+	to create your desired map extent coordinates in JSON.
+
+	<xmp>
+	var intialExtent = new esri.geometry.Extent ({
+		"Xmin": 477423.89,
+		"Ymin": 8663685.98,
+		"Xmax": 553624.05,
+		"Ymax": 8714486.09,
+		"spatialReference": {"wkid":25833}
+	});
+	// create map instance and add a basemap
+	var map = new esri.Map("map" {extent: initialExtent});
+	</xmp>
+
+	By default the Esri logo is drawn to the bottom right of the map which
+	can be turned off by:
+
+	<xmp>var map = new esri.Map("map" {extent: initialExtent, logo: false});</xmp>
+</div>
+
+<h3>Geocoding Service (search place name)</h3>
+<md-divider></md-divider>
+
+<div layout-padding>
+	Norwegian Polar Institute provides the <a href="http://placenames.npolar.no/api">place names API</a>
+	for looking up place names dynamically from user input. The search results can be used to convert
+	place names (e.g "Longyearbyen") into geographic coordinates (e.g.
+	latitude 78.22223 and longitude 15.631533), which you can use to place
+	markers or position the map.
+
+	<h4>Autocomplete place names</h4>
+
+	The <a href="http://yuilibrary.com/yui/docs/autocomplete/">YUI autocomplete library</a>
+	is used to dynamically search for place names as the user types in the input field.
+	As text is entered, the autocomplete returns place name predictions to
+	the application in the form of a drop-down pick list which can be used
+	to help users find and zoom to a specific location.
+
+	<b>Requirements:</b> Make sure you add reference the YUI library before
+	creating the autocomplete instance.
+
+	<xmp>
+	<script src="http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js"></script>
+	</xmp>
+
+	Next, create a new YUI instance for your application and populate it
+	with the required modules by specifying them as arguments to the
+	<em>YUI().use()</em> method.
+
+	<xmp>
+		<script>
+			// Create a new YUI instance and populate it with the required modules.
+			YUI().use("autocomplete", "autocomplete-filters", "autocomplete-highlighters", function(Y) {
+				// AutoComplete is available and ready for use. Add implementation code here.
+			});
+		</script>
+	</xmp>
+
+	You can use the placenames API within your code as results source via
+	the <em>http://placenames.npolar.no:80</em> URL. The results source contains
+	the input terms and a callback method to execute upon receipt of the
+	response.
+
+	The JSON response is an object in the following form:
+
+	<xmp>
+		{
+			location: "Svalbard",
+			title: "Longyearbyen",
+			terrain: "Bustad",
+			approved: true,
+			ident: "8560",
+			north: 78.22223,
+			link: "/stadnamn/Longyearbyen?ident=8560",
+			east: 15.631533,
+			newer_ident: ""
+		}
+	</xmp>
+
+	The fields are explained in the place names <a href="http://placenames.npolar.no/terreng">API</a>.
+	These fields can also be  passed as parameter to narrow the search results.
+
+	The example below restricts your autocomplete results to place names
+	that are approved and within Svalbard:
+
+	<xmp>
+	<script>
+		// Create a new YUI instance and populate it with the required modules.
+		YUI().use("autocomplete", "autocomplete-filters", "autocomplete-highlighters", function(Y) {
+		// Add the yui3-skin-sam class to the body so the default
+		// AutoComplete widget CSS skin will be applied to the form element.
+		Y.one('form').addClass('yui3-skin-sam'); //Autocomplete css
+
+		var geoname_base = "http://placenames.npolar.no:80";
+		// Geoname service URI (JSONP service)
+		// Use GET parameters ?location= and ?approved=true|false to change service URI
+		// and thereby restricting results, e.g. /stadnamn/auto?location=Svalbard&approved=true
+		var geoname_service = geoname_base + "/stadnamn/edge/{query}?callback={callback}&rows=5" + "&approved=true&location=Svalbard⟨=nn";
+		var geoname_autocomplete = Y.one('#geoname_autocomplete');
+		geoname_autocomplete.plug(Y.Plugin.AutoComplete, {
+			resultHighlighter : 'phraseMatch',
+			//resultFormatter: simple_geoname_formatter,
+			resultTextLocator : 'title',
+			source : geoname_service
+		});
+
+		// zoom and add marker to the map when the user selects a place name from result
+		geoname_autocomplete.ac.on('select', function(e) {
+			//console.log(e.result.raw);
+			wgs84ToUtm(e);
+			addMarker(position);
+		})
+	});
+	</script>
+	</xmp>
+
+	The last function zooms and adds a graphic marker to the map when a user
+	selects a place name from the result.
+
+	Finally, create a <em>div</em> element above the map <em>div</em> to hold the search
+	form and add an <em>input</em> element with the <em>geoname_autocomplete</em> id
+	referenced in the YUI instance.
+
+	<xmp>
+	<div id = "search" style="margin:10px 10% 0 10%; position: absolute; width: 250px; z-index: 2;">
+		<form action="" method="get">
+			<input type="search" id="geoname_autocomplete" value="" placeholder="Zoom to place name"/>
+		</form>
+	</div>
+	</xmp>
+</div>
+
+<h3>Map Overlays</h3>
+<md-divider></md-divider>
+
+<div layout-padding>
+	<h4>Adding Graphics</h4>
+
+	The ArcGIS JavaScript API also alows to add or draw graphics such as
+	markers, polylines, polygons, and popups into your map. Those objects
+	have location coordinates tied to them so that they can move when
+	zooming or panning the map.
+
+	You can create and add a point, polyline, or polygon using the
+	<em>esri.Graphic</em> object.
+
+	When adding graphics to the map, you need to wait for the map to load
+	first. This can be done by adding a function that runs after the map
+	finishes loading using the <em>dojo.connect()</em> event handler. The example
+	below adds a simple point around Longyearbyen where the geometry is set
+	using <em>esri.geometry.Point()</em>. The coordinates used to create the point
+	geometry in this sample are in UTM33.
+
+	<xmp>
+	<script>
+		dojo.require("esri.map");
+		function initialize() {
+			// create map instance and add a basemap
+			var map = new esri.Map("map", {logo : false});
+			basemapURL = "http://geodata.npolar.no/ArcGIS/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer"
+			map.addLayer(new esri.layers.ArcGISTiledMapServiceLayer(basemapURL));
+
+			dojo.connect(map, 'onLoad', function() {
+				var symbol = new esri.symbol.SimpleMarkerSymbol().setColor(new dojo.Color([255, 0, 0, 0.5]));
+				var graphic = new esri.Graphic(new esri.geometry.Point(514589.2466, 8682916.3628), symbol);
+				map.graphics.add(graphic);
+			});
+		}
+		dojo.ready(initialize);
+	</script>
+	</xmp>
+
+	Similar method can be used to create lines, polylines, and polygons.
+
+	<h4>Drawing on map</h4>
+
+	If you would like the users to draw a points, lines, or polygons on the
+	screen and capture that geometry, the easiest is to use Draw toolbar of ArCGIS API for Javascript -
+	see <a href="https://developers.arcgis.com/javascript/jssamples/graphics_add.html">Esri documentation</a> for details.
+
+	<xmp>
+	<div id="info" style="margin:5px 0 0 25%; position: absolute; z-index: 2;">
+		<button class="btn btn-primary" id="drawPoint">Point</button>
+		<button class="btn btn-primary" id="drawPolyline">Polyline</button>
+		<button class="btn btn-primary" id="drawPolygon">Polygon</button>
+		<button class="btn btn-primary" id="drawExtent">Extent</button>
+		<button class="btn" id="clear">Clear</button>
+	</div>
+	<div id="map3" style="width:100%; height:256px;"></div>
+	</xmp>
+</div>
+
+<h3>Map Service Layers</h3>
+<md-divider></md-divider>
+
+<div layout-padding>
+	Norwegian Polar Institute provides various dynamic thematic map services
+	that can easily be overlayed on the top basemaps. You can use the map
+	<a href="http://geodata.npolar.no/arcgis/rest/services">Services Directory</a> to
+	discover the available map services.  Dynamic map services are more flexible than
+	cached services by providing the user options such as turn on and off layers in the
+	service, change layer transparency, freely adjust the scale, retrieve	layer info
+	and legend, etc.
+
+	To create dynamic layer to a map, you only need to call the
+	<em>esri.layers.ArcGISDynamicMapServiceLayer()</em> constructor pointing to the
+	URL of service's REST endpoint (e.g. <a href="http://geodata.npolar.no/ArcGIS/rest/services/inspire3/Sjofuglkolonier/MapServer">http://geodata.npolar.no/ArcGIS/rest/services/inspire3/Sjofuglkolonier/MapServer</a>).
+
+	<pre>
+	//Use the ImageParameters to set the visible layers in the map service during ArcGISDynamicMapServiceLayer construction.
+	var imageParameters = new esri.layers.ImageParameters();
+	imageParameters.format = "png32";  //sets the image format to PNG32.
+	imageParameters.layerIds = [0]; // we want the layer with id 0 to be visible
+	imageParameters.layerOption = esri.layers.ImageParameters.LAYER_OPTION_SHOW;
+	//Takes a URL to a dynamic map service.
+	serviceURL = "//geodata.npolar.no/ArcGIS/rest/services/inspire3/Sjofuglkolonier/MapServer";
+	var dynamicLayer = new esri.layers.ArcGISDynamicMapServiceLayer(serviceURL, {
+		"opacity":0.75,
+		"imageParameters":imageParameters
+	});
+	map.addLayer(dynamicLayer);
+	</pre>
+
+	The above code creates a layer from a dynamic ArcGIS Server map service. The following arguments were passed to the
+	<a href="https://developers.arcgis.com/en/javascript/jsapi/arcgisdynamicmapservicelayer.html">ArcGISDynamicMapServiceLayer</a>
+	constructor in order to create the layer:
+
+	<ul>
+		<li>The URL of the map service. The URL provided in this sample is the Seabird colonies map of Svalbard.</li>
+		<li>Optional parameters to specify the image format (png, jpg, png32 etc).</li>
+		<li>An opacity setting that determines the transparency of the layer which is between 0 and 1.</li>
+	</ul>
+
+	Finally, you need to add that dynamic layer on top of the basemap by calling the map's <em>addLayer()</em> method.
+</div>
