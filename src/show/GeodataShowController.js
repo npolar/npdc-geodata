@@ -49,6 +49,89 @@ var GeodataShowController = function ($scope) {
     },
   ];
 
+  $scope.cachedBasemapServices = {
+    labels: ['Service Name and Preview', 'Layers', 'Projection', 'Service URL', 'Capabilities'],
+    items: [
+      {
+        service_name: 'NP_Basiskart_Svalbard_WMTS_25833',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer?f=jsapi',
+        layers: 'Svalbard topography',
+        projection: 'ETRS 89 UTM 33 (EPSG:25833)',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer',
+        capabilities: [
+          { type: 'WMTS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer/WMTS/1.0.0/WMTSCapabilities.xml' },
+          { type: 'WMS', link: 'http://geodata.npolar.no/arcgis/services/Basisdata/NP_Basiskart_Svalbard_WMTS_25833/MapServer/WMSServer?request=GetCapabilities&service=WMS' }
+        ]
+      },
+      {
+        service_name: 'NP_Ortofoto_Svalbard_WMTS_25833',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Ortofoto_Svalbard_WMTS_25833/MapServer?f=jsapi',
+        layers: 'Svalbard orthophoto',
+        projection: 'ETRS 89 UTM 33 (EPSG:25833)',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Ortofoto_Svalbard_WMTS_25833/MapServer',
+        capabilities: [
+          { type: 'WMTS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Ortofoto_Svalbard_WMTS_25833/MapServer/WMTS/1.0.0/WMTSCapabilities.xml' }
+        ]
+      },
+      {
+        service_name: 'NP_Satellitt_Svalbard_WMTS_25833',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_25833/MapServer?f=jsapi',
+        layers: 'Svalbard satellite imagery',
+        projection: 'ETRS 89 UTM 33 (EPSG:25833)',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_25833/MapServer',
+        capabilities: [
+          { type: 'WMTS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_25833/MapServer/WMTS/1.0.0/WMTSCapabilities.xml' }
+        ]
+      },
+      {
+        service_name: 'NP_Basiskart_JanMayen_WMTS_25829',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25829/MapServer?f=jsapi',
+        layers: 'Jan Mayen topography',
+        projection: 'ETRS 89 UTM 29 (EPSG:25829)',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25829/MapServer',
+        capabilities: [
+          { type: 'WMTS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25829/MapServer/WMTS/1.0.0/WMTSCapabilities.xml' },
+          { type: 'WMS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25829/MapServer/WMSServer?request=GetCapabilities&service=WMS' }
+        ]
+      },
+      {
+        service_name: 'NP_Basiskart_JanMayen_WMTS_25833',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25833/MapServer?f=jsapi',
+        layers: 'Jan Mayen topography',
+        projection: 'ETRS 89 UTM 33 (EPSG:25833)',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25833/MapServer',
+        capabilities: [
+          { type: 'WMTS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25833/MapServer/WMTS/1.0.0/WMTSCapabilities.xml' },
+          { type: 'WMS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25833/MapServer/WMSServer?request=GetCapabilities&service=WMS' }
+        ]
+      }
+    ]
+  };
+
+  $scope.dynamicBasemapServices = {
+    labels: ['Service Name and Preview', 'Layers', 'Service Url', 'Capabilities'],
+    items: [
+      {
+        service_name: 'NP_Basiskart_Svalbard_WMS',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMS/MapServer?f=jsapi',
+        layers: 'Svalbard topography',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMS/MapServer',
+        capabilities: [
+          { type: 'WMS', link: 'http://geodata.npolar.no/arcgis/services/Basisdata/NP_Basiskart_Svalbard_WMS/MapServer/WMSServer?request=GetCapabilities&service=WMS' }
+        ]
+      },
+      {
+        service_name: 'NP_Basiskart_JanMayen_WMS',
+        preview_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMS/MapServer?f=jsapi',
+        layers: 'Jan Mayen topography',
+        service_link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS/MapServer',
+        capabilities: [
+          { type: 'WMS', link: 'http://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_JanMayen_WMTS_25829/MapServer/WMSServer?request=GetCapabilities&service=WMS' }
+        ]
+      }
+    ]
+  };
+
 };
 
 module.exports = GeodataShowController;
