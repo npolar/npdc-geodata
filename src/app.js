@@ -4,11 +4,8 @@ var npdcCommon = require('npdc-common');
 var AutoConfig = npdcCommon.AutoConfig;
 
 var angular = require('angular');
-require('formula');
-require('angular-route');
-require('angular-npolar');
 
-var npdcGeodataApp = angular.module('npdcGeodataApp', ['ngRoute', 'formula', 'npolarApi', 'npolarUi', 'npdcUi', 'templates']);
+var npdcGeodataApp = angular.module('npdcGeodataApp', ['npdcUi']);
 
 npdcGeodataApp.controller('GeodataShowController', require('./show/GeodataShowController'));
 
