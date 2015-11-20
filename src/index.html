@@ -7,8 +7,7 @@
     <title>Geodata</title>
 
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link href="/assets/npdc-common-master-latest.css" rel="stylesheet" />
+    <link href="/assets/npdc-common-<!-- @echo COMMON_VERSION -->.css" rel="stylesheet" />
 
     <script>var VERSION = '<!-- @echo VERSION -->'; console.log("npdc-geodata version:", VERSION)</script>
 
@@ -96,6 +95,9 @@
   </head>
   <body>
     <npdc:app></npdc:app>
+    <!-- @if PROD -->
+    <script src="/assets/npdc-common-<!-- @echo COMMON_VERSION -->.js"></script>
+    <!-- @endif -->
     <script src="app.js"></script>
   </body>
 </html>
