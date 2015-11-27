@@ -3,7 +3,7 @@ var npdcGulp = require('npdc-gulp');
 var baseConf = npdcGulp.baseConfig;
 var config = {
   src: {
-    config: baseConf.src.config.concat(baseConf.src.root + '/**/*.md')
+    assets: baseConf.src.assets.concat(baseConf.src.root + '/**/*.md')
   }
 };
 npdcGulp.loadAppTasks(gulp, config);
