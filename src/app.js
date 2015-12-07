@@ -5,7 +5,7 @@ var AutoConfig = npdcCommon.AutoConfig;
 
 var angular = require('angular');
 
-var npdcGeodataApp = angular.module('npdcGeodataApp', ['npdcUi']);
+var npdcGeodataApp = angular.module('npdcGeodataApp', ['npdcCommon']);
 
 npdcGeodataApp.controller('GeodataShowController', require('./show/GeodataShowController'));
 
